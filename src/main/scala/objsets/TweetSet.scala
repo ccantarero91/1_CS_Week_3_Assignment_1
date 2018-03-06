@@ -52,7 +52,7 @@ abstract class TweetSet {
    * Question: Should we implment this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-    def union(that: TweetSet): TweetSet = ???
+    def union(that: TweetSet): TweetSet
   
   /**
    * Returns the tweet from this set which has the greatest retweet count.
@@ -106,7 +106,9 @@ abstract class TweetSet {
 
 class Empty extends TweetSet {
     def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = this
-  
+
+    def union(that: TweetSet): TweetSet = that
+
   /**
    * The following methods are already implemented
    */
@@ -127,6 +129,10 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
       new NonEmpty(elem,left.filterAcc(p,acc.incl(elem)),right.filterAcc(p,acc.incl(elem)))
     else
       new Empty
+  }
+
+  def union(that: TweetSet): TweetSet = {
+    ((left union right) union that) incl elem
   }
   
   /**
