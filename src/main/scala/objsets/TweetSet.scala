@@ -132,10 +132,11 @@ class Empty extends TweetSet {
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
-    if(p(elem))
-      new NonEmpty(elem,left.filterAcc(p,acc.incl(elem)),right.filterAcc(p,acc.incl(elem)))
-    else
-      new Empty
+    if(p(elem)){
+      right.filterAcc(p,left.filterAcc(p,acc.incl(elem)))
+    }else{
+      right.filterAcc(p,left.filterAcc(p,acc))
+    }
   }
 
   def union(that: TweetSet): TweetSet = {
@@ -226,9 +227,5 @@ object GoogleVsApple {
 
 object Main extends App {
   // Print the trending tweets
-  print("init")
-  GoogleVsApple.appleTweets foreach println
-  GoogleVsApple.googleTweets foreach println
   GoogleVsApple.trending foreach println
-  print("finished")
 }
